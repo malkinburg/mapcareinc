@@ -1,13 +1,13 @@
 "use client";
 
-import { Shield, Award, CheckCircle, FileCheck } from "lucide-react";
+import { Clock, Award, CheckCircle, FileCheck } from "lucide-react";
 import { SectionWrapper } from "@/components/shared/section-wrapper";
 import { MotionWrapper } from "@/components/shared/motion-wrapper";
 
 const badges = [
   {
-    icon: Shield,
-    label: "Licensed Ontario Staffing Agency",
+    icon: Clock,
+    label: "24/7 On-Call Support",
   },
   {
     icon: FileCheck,

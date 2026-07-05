@@ -68,8 +68,8 @@ export function Hero() {
               <div className="flex items-center gap-2 text-sm text-muted-teal">
                 <Shield className="h-4 w-4 text-teal" />
                 <span>
-                  Licensed Ontario Staffing Agency &bull; Serving 10+
-                  Communities
+                  Fully Insured &amp; Bonded &bull; Serving 10+ Communities
+                  Across Ontario
                 </span>
               </div>
             </MotionWrapper>
