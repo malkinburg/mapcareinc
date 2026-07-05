@@ -14,25 +14,72 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { applicationFormSchema, type ApplicationFormData } from "@/lib/schemas";
+import { z } from "zod";
+import {
+  applicationFormSchema,
+  isAcceptedResume,
+  RESUME_ACCEPT_EXTENSIONS,
+  RESUME_MAX_BYTES,
+  RESUME_SIZE_MESSAGE,
+  RESUME_TYPE_MESSAGE,
+} from "@/lib/schemas";
 import { CheckCircle } from "lucide-react";
 import { positions } from "@/data/positions";
 import Link from "next/link";
 
+const applicationWithResumeSchema = applicationFormSchema.extend({
+  resume: z
+    .custom<FileList>((v) => typeof FileList !== "undefined" && v instanceof FileList && v.length === 1, {
+      message: "Please attach your resume",
+    })
+    .refine((files) => isAcceptedResume(files[0]), RESUME_TYPE_MESSAGE)
+    .refine((files) => files[0].size <= RESUME_MAX_BYTES, RESUME_SIZE_MESSAGE),
+});
+
+type ApplicationWithResumeData = z.infer<typeof applicationWithResumeSchema>;
+
 export function ApplicationForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<ApplicationFormData>({
-    resolver: zodResolver(applicationFormSchema),
+  } = useForm<ApplicationWithResumeData>({
+    resolver: zodResolver(applicationWithResumeSchema),
   });
 
-  async function onSubmit(data: ApplicationFormData) {
-    console.log("Application submitted:", data);
-    setSubmitted(true);
+  async function onSubmit(data: ApplicationWithResumeData) {
+    setSubmitError(null);
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("email", data.email);
+    formData.append("phone", data.phone);
+    formData.append("positionId", data.positionId);
+    formData.append("experience", data.experience);
+    formData.append("consent", String(data.consent));
+    formData.append("resume", data.resume[0]);
+
+    try {
+      const res = await fetch("/api/careers", {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        setSubmitError(
+          body?.message ??
+            "We couldn't submit your application right now. Please try again or email us directly."
+        );
+        return;
+      }
+      setSubmitted(true);
+    } catch {
+      setSubmitError(
+        "We couldn't submit your application right now. Please check your connection and try again."
+      );
+    }
   }
 
   if (submitted) {
@@ -105,7 +152,7 @@ export function ApplicationForm() {
         <div>
           <Label htmlFor="app-position">Position of Interest *</Label>
           <Select onValueChange={(v: string | null) => { if (v) setValue("positionId", v); }}>
-            <SelectTrigger id="app-position" className="mt-1.5">
+            <SelectTrigger id="app-position" className="mt-1.5 w-full">
               <SelectValue placeholder="Select a position" />
             </SelectTrigger>
             <SelectContent>
@@ -144,6 +191,29 @@ export function ApplicationForm() {
         )}
       </div>
 
+      <div>
+        <Label htmlFor="app-resume">Resume *</Label>
+        <Input
+          id="app-resume"
+          type="file"
+          accept={RESUME_ACCEPT_EXTENSIONS.join(",")}
+          {...register("resume")}
+          className="mt-1.5 h-auto py-2 file:mr-3 file:rounded-md file:border-0 file:bg-teal/10 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-teal cursor-pointer"
+          aria-invalid={!!errors.resume}
+          aria-describedby={
+            errors.resume ? "app-resume-hint app-resume-error" : "app-resume-hint"
+          }
+        />
+        <p id="app-resume-hint" className="text-xs text-slate-brand mt-1">
+          PDF or Word document, up to 5MB.
+        </p>
+        {errors.resume && (
+          <p id="app-resume-error" className="text-sm text-terracotta mt-1">
+            {errors.resume.message as string}
+          </p>
+        )}
+      </div>
+
       <div className="flex items-start gap-2">
         <input
           type="checkbox"
@@ -151,7 +221,7 @@ export function ApplicationForm() {
           {...register("consent")}
           className="mt-1 h-4 w-4 accent-teal"
         />
-        <Label htmlFor="app-consent" className="text-sm text-slate-brand font-normal leading-relaxed">
+        <Label htmlFor="app-consent" className="block text-sm text-slate-brand font-normal leading-relaxed">
           I consent to Mapcare Inc collecting and processing my personal
           information as described in the{" "}
           <Link href="/privacy-policy" className="text-teal underline underline-offset-2">
@@ -162,6 +232,12 @@ export function ApplicationForm() {
       </div>
       {errors.consent && (
         <p className="text-sm text-terracotta">{errors.consent.message}</p>
+      )}
+
+      {submitError && (
+        <p role="alert" className="text-sm text-terracotta">
+          {submitError}
+        </p>
       )}
 
       <Button

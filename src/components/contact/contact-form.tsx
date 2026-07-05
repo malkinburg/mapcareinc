@@ -27,6 +27,7 @@ const inquiryTypes = [
 
 export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -37,9 +38,27 @@ export function ContactForm() {
   });
 
   async function onSubmit(data: ContactFormData) {
-    // In production, this would POST to /api/contact
-    console.log("Contact form submitted:", data);
-    setSubmitted(true);
+    setSubmitError(null);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        setSubmitError(
+          body?.message ??
+            "We couldn't send your message right now. Please try again or email us directly."
+        );
+        return;
+      }
+      setSubmitted(true);
+    } catch {
+      setSubmitError(
+        "We couldn't send your message right now. Please check your connection and try again."
+      );
+    }
   }
 
   if (submitted) {
@@ -106,7 +125,7 @@ export function ContactForm() {
       <div>
         <Label htmlFor="contact-inquiry">Inquiry Type *</Label>
         <Select onValueChange={(v: string | null) => { if (v) setValue("inquiryType", v as ContactFormData["inquiryType"]); }}>
-          <SelectTrigger id="contact-inquiry" className="mt-1.5">
+          <SelectTrigger id="contact-inquiry" className="mt-1.5 w-full">
             <SelectValue placeholder="Select an option" />
           </SelectTrigger>
           <SelectContent>
@@ -148,7 +167,7 @@ export function ContactForm() {
           {...register("consent")}
           className="mt-1 h-4 w-4 accent-teal"
         />
-        <Label htmlFor="contact-consent" className="text-sm text-slate-brand font-normal leading-relaxed">
+        <Label htmlFor="contact-consent" className="block text-sm text-slate-brand font-normal leading-relaxed">
           I consent to Mapcare Inc collecting and processing my personal
           information as described in the{" "}
           <Link href="/privacy-policy" className="text-teal underline underline-offset-2">
@@ -159,6 +178,12 @@ export function ContactForm() {
       </div>
       {errors.consent && (
         <p className="text-sm text-terracotta">{errors.consent.message}</p>
+      )}
+
+      {submitError && (
+        <p role="alert" className="text-sm text-terracotta">
+          {submitError}
+        </p>
       )}
 
       <Button

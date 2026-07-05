@@ -19,15 +19,15 @@ export function Header() {
         {/* Logo */}
         <Link href="/" className="flex-shrink-0" aria-label="Mapcare Inc home">
           <Image
-            src="/images/logo.svg"
+            src="/images/logo.png"
             alt="Mapcare Inc — Staffing & Support"
-            width={180}
-            height={54}
+            width={118}
+            height={52}
             className="hidden sm:block"
             priority
           />
           <Image
-            src="/images/logo-icon.svg"
+            src="/images/logo-icon.png"
             alt="Mapcare Inc"
             width={40}
             height={40}
@@ -107,7 +107,7 @@ export function Header() {
             <div className="flex flex-col h-full">
               <div className="flex items-center justify-between p-4 border-b border-soft-gray">
                 <Image
-                  src="/images/logo-icon.svg"
+                  src="/images/logo-icon.png"
                   alt="Mapcare Inc"
                   width={36}
                   height={36}

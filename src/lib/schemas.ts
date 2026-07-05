@@ -33,3 +33,23 @@ export const applicationFormSchema = z.object({
 });
 
 export type ApplicationFormData = z.infer<typeof applicationFormSchema>;
+
+// Resume upload constraints, shared by the careers form and API route.
+// Netlify functions cap request bodies at ~6MB, so keep the limit below that.
+export const RESUME_MAX_BYTES = 5 * 1024 * 1024;
+export const RESUME_ACCEPT_EXTENSIONS = [".pdf", ".doc", ".docx"];
+export const RESUME_ACCEPT_TYPES = [
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+export const RESUME_TYPE_MESSAGE =
+  "Please upload your resume as a PDF or Word document (.pdf, .doc, .docx)";
+export const RESUME_SIZE_MESSAGE = "Resume file must be 5MB or smaller";
+
+export function isAcceptedResume(file: { name: string; type: string }) {
+  return (
+    RESUME_ACCEPT_TYPES.includes(file.type) ||
+    RESUME_ACCEPT_EXTENSIONS.some((ext) => file.name.toLowerCase().endsWith(ext))
+  );
+}

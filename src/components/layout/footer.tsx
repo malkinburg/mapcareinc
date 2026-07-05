@@ -36,9 +36,9 @@ export function Footer() {
           <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/" aria-label="Mapcare Inc home">
               <Image
-                src="/images/logo.svg"
+                src="/images/logo.png"
                 alt="Mapcare Inc"
-                width={160}
+                width={109}
                 height={48}
                 className="brightness-0 invert opacity-90"
               />

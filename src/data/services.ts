@@ -56,7 +56,7 @@ export const services: ServiceData[] = [
       {
         question: "What qualifications do your foster care professionals have?",
         answer:
-          "All our care professionals hold relevant certifications in child and youth care, have completed Vulnerable Sector Checks, and receive ongoing training in trauma-informed care, First Aid/CPR, and crisis intervention.",
+          "All our care professionals hold relevant certifications in child and youth care, have completed Vulnerable Sector Checks, Child Welfare Checks, and Broad Record Checks (BRC), and are UMAB (Understanding and Managing Aggressive Behaviour) trained. They also receive ongoing training in trauma-informed care, First Aid/CPR, and crisis intervention.",
       },
       {
         question: "How quickly can you provide staffing support?",

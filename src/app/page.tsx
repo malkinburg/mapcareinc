@@ -31,7 +31,7 @@ export default function HomePage() {
             description:
               "Ontario's trusted non-medical care staffing provider serving foster care and vulnerable populations.",
             url: COMPANY.url,
-            logo: `${COMPANY.url}/images/logo.svg`,
+            logo: `${COMPANY.url}/images/logo.png`,
             telephone: COMPANY.phoneTel,
             email: COMPANY.email,
             address: {

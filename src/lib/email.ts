@@ -28,12 +28,16 @@ async function send(opts: {
   subject: string;
   html: string;
   replyTo?: string;
+  attachments?: { filename: string; content: Buffer }[];
 }) {
   if (!process.env.RESEND_API_KEY) {
     if (process.env.NODE_ENV === "production") {
       throw new Error("RESEND_API_KEY is not configured");
     }
-    console.warn("[email] RESEND_API_KEY not set — not sending. Payload:", opts);
+    console.warn("[email] RESEND_API_KEY not set — not sending. Payload:", {
+      ...opts,
+      attachments: opts.attachments?.map((a) => `${a.filename} (${a.content.length} bytes)`),
+    });
     return;
   }
 
@@ -44,6 +48,7 @@ async function send(opts: {
     replyTo: opts.replyTo,
     subject: opts.subject,
     html: opts.html,
+    attachments: opts.attachments,
   });
 
   if (error) {
@@ -84,7 +89,8 @@ export async function sendContactEmail(data: ContactFormData) {
 
 export async function sendApplicationEmail(
   data: ApplicationFormData,
-  positionTitle?: string
+  positionTitle?: string,
+  resume?: { filename: string; content: Buffer }
 ) {
   const html = `
     <h2>New career application</h2>
@@ -94,6 +100,7 @@ export async function sendApplicationEmail(
       ${row("Phone", escapeHtml(data.phone))}
       ${row("Position", escapeHtml(positionTitle ?? data.positionId))}
       ${row("Experience", escapeHtml(data.experience).replace(/\n/g, "<br>"))}
+      ${row("Resume", resume ? escapeHtml(resume.filename) + " (attached)" : "—")}
     </table>`;
 
   await send({
@@ -101,5 +108,6 @@ export async function sendApplicationEmail(
     subject: `New application from ${data.name}${positionTitle ? ` — ${positionTitle}` : ""}`,
     html,
     replyTo: data.email,
+    attachments: resume ? [resume] : undefined,
   });
 }

@@ -65,7 +65,7 @@ export function CTABanner({
                 href={secondaryHref}
                 className={cn(
                   buttonVariants({ variant: "outline", size: "lg" }),
-                  "rounded-lg px-8 font-semibold border-white/30 text-white hover:bg-white/10"
+                  "rounded-lg px-8 font-semibold bg-transparent border-white/30 text-white hover:bg-white/10 hover:text-white"
                 )}
               >
                 {secondaryLabel}

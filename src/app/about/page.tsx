@@ -148,7 +148,7 @@ export default function AboutPage() {
           title="The People Behind Mapcare"
           subtitle="A dedicated leadership team with decades of combined experience in child welfare, staffing, and community services."
         />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
           {team.map((member, index) => (
             <Card key={member.name} className="shadow-card rounded-xl border-0 text-center">
               <CardContent className="p-6">
