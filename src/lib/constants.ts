@@ -5,14 +5,14 @@ export const COMPANY = {
   // set the number here and restore the licence line in the footer — displaying
   // it is required by Ontario law (licensing in effect since July 2024).
   licenseNumber: "",
-  phone: "(226) 606-7968",
-  phoneTel: "+12266067968",
+  phone: "+1 (226) 808-7714",
+  phoneTel: "+12268087714",
   email: "info@mapcare.ca",
   address: {
-    street: "10-457 Albert Street",
+    street: "75B Lilian Drive",
     city: "Waterloo",
     province: "Ontario",
-    postalCode: "N2L 5A7",
+    postalCode: "N2J 4J8",
     country: "Canada",
   },
   officeHours: {
