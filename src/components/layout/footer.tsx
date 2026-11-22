@@ -168,7 +168,10 @@ export function Footer() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-warm-white/50">
             <p>
               &copy; {new Date().getFullYear()} {COMPANY.name}. All rights
-              reserved.
+              reserved. Licensed Ontario Staffing Agency
+              {COMPANY.licenseNumber && (
+                <> &middot; Licence No. {COMPANY.licenseNumber}</>
+              )}
             </p>
             <div className="flex items-center gap-4">
               <Link

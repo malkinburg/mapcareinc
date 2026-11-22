@@ -1,9 +1,9 @@
 export const COMPANY = {
   name: "Mapcare Inc",
   tagline: "Guiding Care, Connecting People",
-  // Ontario staffing agency licence application is in progress. Once granted,
-  // set the number here and restore the licence line in the footer — displaying
-  // it is required by Ontario law (licensing in effect since July 2024).
+  // Ontario staffing agency licence number (licence granted). Intentionally
+  // left blank for now — the footer shows "Licence No. …" automatically once
+  // it is set here.
   licenseNumber: "",
   phone: "+1 (226) 808-7714",
   phoneTel: "+12268087714",

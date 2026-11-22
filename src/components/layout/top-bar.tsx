@@ -19,9 +19,9 @@ export function TopBar() {
         <div className="flex items-center gap-1.5 text-warm-white/80">
           <Shield className="h-3.5 w-3.5" />
           <span className="hidden md:inline">
-            Serving Communities Across Ontario
+            Licensed Ontario Staffing Agency
           </span>
-          <span className="md:hidden">Fully Insured</span>
+          <span className="md:hidden">Licensed & Insured</span>
         </div>
       </div>
     </div>
